@@ -454,8 +454,68 @@ export default function Home() {
         background: 'radial-gradient(ellipse 70% 55% at 50% 40%, rgba(0,180,255,0.07) 0%, transparent 70%), radial-gradient(ellipse 50% 40% at 75% 60%, rgba(124,58,237,0.08) 0%, transparent 60%)',
       }} />
 
+      {/* ── Hero name + badge — above photos ── */}
+      <div className="relative z-20 flex flex-col items-center justify-center pt-16 pb-2 px-4 text-center">
+        {/* Big name */}
+        <motion.h1
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="font-grotesk font-black uppercase tracking-tight text-white"
+          style={{
+            fontSize: 'clamp(2.6rem, 7vw, 5.5rem)',
+            lineHeight: 1,
+            letterSpacing: '-0.02em',
+            textShadow: '0 0 40px rgba(0,200,255,0.25), 0 0 80px rgba(0,200,255,0.1)',
+          }}
+        >
+          SHAM{' '}
+          <span
+            style={{
+              WebkitTextStroke: '2px rgba(0,229,255,0.7)',
+              color: 'transparent',
+              textShadow: 'none',
+            }}
+          >
+            B
+          </span>
+        </motion.h1>
+
+        {/* Available badge */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mt-4 flex items-center gap-2 px-5 py-2 rounded-full"
+          style={{
+            background: 'rgba(0,40,20,0.85)',
+            border: '1px solid rgba(0,255,120,0.3)',
+            backdropFilter: 'blur(10px)',
+            boxShadow: '0 0 18px rgba(0,255,100,0.15)',
+          }}
+        >
+          {/* Pulsing green dot */}
+          <span className="relative flex h-2.5 w-2.5">
+            <span
+              className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+              style={{ background: '#00ff88' }}
+            />
+            <span
+              className="relative inline-flex rounded-full h-2.5 w-2.5"
+              style={{ background: '#00ff88' }}
+            />
+          </span>
+          <span
+            className="font-mono text-xs tracking-widest uppercase"
+            style={{ color: 'rgba(0,255,136,0.9)' }}
+          >
+            Available for Internships &amp; Collaboration
+          </span>
+        </motion.div>
+      </div>
+
       {/* ── Top photo strip ── */}
-      <div className="relative z-20 flex items-end justify-center gap-6 pt-20 pb-4 px-4" style={{ perspective: 900 }}>
+      <div className="relative z-20 flex items-end justify-center gap-6 pt-6 pb-4 px-4" style={{ perspective: 900 }}>
         <PhotoCard src={null} alt="photo 1" rotate={-8}  delay={0.1} translateY={12} />
         <PhotoCard src={null} alt="photo 2" rotate={0}   delay={0.2} translateY={-8} />
         <PhotoCard src={null} alt="photo 3" rotate={7}   delay={0.3} translateY={10} />
