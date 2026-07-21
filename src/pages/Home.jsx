@@ -429,11 +429,27 @@ function BulletRow({ icon: Icon, label, value, delay }) {
       initial={{ opacity: 0, x: -16 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.45, delay }}
-      className="flex items-start gap-3 text-sm"
+      className="flex items-start gap-3"
     >
-      <Icon size={14} className="text-cyan-accent mt-0.5 shrink-0" />
-      <p style={{ color: 'rgba(255,255,255,0.75)' }}>
-        <span className="text-white font-semibold">{label}:</span> {value}
+      <span
+        className="mt-0.5 shrink-0 flex items-center justify-center rounded-md w-6 h-6"
+        style={{ background: 'rgba(0,229,255,0.08)', border: '1px solid rgba(0,229,255,0.15)' }}
+      >
+        <Icon size={11} style={{ color: '#00e5ff' }} />
+      </span>
+      <p className="text-sm leading-snug" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+        <span
+          className="font-bold uppercase tracking-widest mr-1"
+          style={{
+            fontSize: '0.65rem',
+            fontFamily: "'Space Mono', monospace",
+            color: '#00e5ff',
+            letterSpacing: '0.12em',
+          }}
+        >
+          {label}
+        </span>
+        <span style={{ color: 'rgba(255,255,255,0.72)', fontWeight: 300 }}>{value}</span>
       </p>
     </motion.div>
   );
@@ -544,11 +560,41 @@ export default function Home() {
             ))}
 
             <div className="relative" style={{ zIndex: 3 }}>
-              <h2 className="text-white font-bold text-xl leading-tight">
+              {/* Premium title */}
+              <h2
+                className="font-syne font-extrabold leading-tight tracking-tight"
+                style={{
+                  fontSize: '1.25rem',
+                  background: 'linear-gradient(135deg, #ffffff 0%, #a0d8ef 60%, #7c3aed 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  letterSpacing: '-0.01em',
+                }}
+              >
                 B.Tech AI &amp; Data Science Student
               </h2>
-              <p className="text-cyan-accent font-bold text-lg mt-0.5">AI Engineer</p>
-              <div className="w-20 h-0.5 mt-2 rounded-full bg-gradient-to-r from-cyan-accent to-purple-accent" />
+              {/* Role — animated shimmer */}
+              <p
+                className="font-syne font-bold text-lg mt-1 relative overflow-hidden"
+                style={{
+                  background: 'linear-gradient(90deg, #00e5ff 0%, #ffffff 40%, #00e5ff 80%)',
+                  backgroundSize: '200% auto',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  animation: 'shimmerText 3s linear infinite',
+                }}
+              >
+                AI Engineer
+              </p>
+              <div className="w-20 h-[1.5px] mt-2 rounded-full bg-gradient-to-r from-cyan-accent via-purple-accent to-transparent" />
+              <style>{`
+                @keyframes shimmerText {
+                  0%   { background-position: 200% center; }
+                  100% { background-position: -200% center; }
+                }
+              `}</style>
             </div>
 
             <div className="relative flex flex-col gap-3" style={{ zIndex: 3 }}>
@@ -563,30 +609,44 @@ export default function Home() {
             {/* CTA buttons */}
             <div className="relative flex flex-wrap gap-3 pt-2" style={{ zIndex: 3 }}>
               <motion.button
-                whileHover={{ scale: 1.05, boxShadow: '0 0 24px rgba(0,200,255,0.55)' }}
+                whileHover={{ scale: 1.05, boxShadow: '0 0 28px rgba(0,229,255,0.6)' }}
                 whileTap={{ scale: 0.97 }}
                 className="px-5 py-2.5 rounded-xl text-sm font-bold text-black cursor-pointer border-none"
-                style={{ background: 'linear-gradient(135deg,#00e5ff,#0099cc)' }}
+                style={{
+                  background: 'linear-gradient(135deg,#00e5ff,#0099cc)',
+                  fontFamily: "'Syne', sans-serif",
+                  letterSpacing: '0.04em',
+                }}
               >
                 About Me
               </motion.button>
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, borderColor: 'rgba(0,229,255,0.5)', boxShadow: '0 0 16px rgba(0,229,255,0.15)' }}
                 whileTap={{ scale: 0.97 }}
                 className="px-5 py-2.5 rounded-xl text-sm font-bold text-white cursor-pointer"
-                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)' }}
+                style={{
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  fontFamily: "'Syne', sans-serif",
+                  letterSpacing: '0.04em',
+                }}
               >
                 Hire Me
               </motion.button>
               <motion.a
                 href={`${import.meta.env.BASE_URL}resume.pdf`}
                 download
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, borderColor: 'rgba(124,58,237,0.5)', boxShadow: '0 0 16px rgba(124,58,237,0.15)' }}
                 whileTap={{ scale: 0.97 }}
                 className="px-5 py-2.5 rounded-xl text-sm font-bold text-white flex items-center gap-2"
-                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)' }}
+                style={{
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  fontFamily: "'Syne', sans-serif",
+                  letterSpacing: '0.04em',
+                }}
               >
-                <FaDownload size={12} /> Resume
+                <FaDownload size={11} /> Resume
               </motion.a>
             </div>
 
