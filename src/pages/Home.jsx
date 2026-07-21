@@ -437,19 +437,39 @@ function BulletRow({ icon: Icon, label, value, delay }) {
       >
         <Icon size={11} style={{ color: '#00e5ff' }} />
       </span>
-      <p className="text-sm leading-snug" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+      <p className="leading-snug">
+        {/* Label — big, stylish, gradient */}
         <span
-          className="font-bold uppercase tracking-widest mr-1"
           style={{
-            fontSize: '0.65rem',
-            fontFamily: "'Space Mono', monospace",
-            color: '#00e5ff',
-            letterSpacing: '0.12em',
+            display: 'block',
+            fontFamily: "'Syne', sans-serif",
+            fontWeight: 800,
+            fontSize: '0.82rem',
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            background: 'linear-gradient(90deg, #00e5ff 0%, #a78bfa 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            lineHeight: 1.3,
           }}
         >
           {label}
         </span>
-        <span style={{ color: 'rgba(255,255,255,0.72)', fontWeight: 300 }}>{value}</span>
+        {/* Value — light, readable */}
+        <span
+          style={{
+            display: 'block',
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontWeight: 300,
+            fontSize: '0.8rem',
+            color: 'rgba(255,255,255,0.65)',
+            lineHeight: 1.5,
+            marginTop: '0.1rem',
+          }}
+        >
+          {value}
+        </span>
       </p>
     </motion.div>
   );
