@@ -346,16 +346,16 @@ function PhotoCard({ src, alt, rotate, delay, translateY }) {
       whileHover={{ y: (translateY ?? 0) - 14, scale: 1.07, rotateZ: 0, transition: { duration: 0.3 } }}
       className="relative shadow-2xl cursor-pointer"
       style={{
-        width: 160, height: 200,
-        borderRadius: 16,
+        width: 200, height: 320,
+        borderRadius: 20,
         transformStyle: 'preserve-3d',
         boxShadow: '0 8px 40px rgba(0,0,0,0.7), 0 0 30px rgba(0,200,255,0.18)',
       }}
     >
       {/* Laser border */}
-      <LaserBorder color="#00e5ff" duration={2.5} radius="16px" size={2} />
+      <LaserBorder color="#00e5ff" duration={2.5} radius="20px" size={2} />
       {/* Inner content */}
-      <div className="absolute inset-[2px] rounded-2xl overflow-hidden" style={{ zIndex: 2, background: 'linear-gradient(135deg,#0d1b2a,#0a0f1e)' }}>
+      <div className="absolute inset-[2px] overflow-hidden" style={{ zIndex: 2, borderRadius: 18, background: 'linear-gradient(135deg,#0d1b2a,#0a0f1e)' }}>
         {src ? (
           <img src={src} alt={alt} className="w-full h-full object-cover" />
         ) : (
