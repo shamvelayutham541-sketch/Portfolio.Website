@@ -10,42 +10,26 @@
   }
 }
 
-/* ─── Vertical Snap Container ────────────────────────────────── */
-.snap-container {
-  display: flex;
-  flex-direction: column;
-  width: 100vw;
-  height: max-content;
-  cursor: grab;
-  user-select: none;
-  -webkit-user-select: none;
-}
+/* ─── Cinematic Scroll Container ────────────────────────────── */
+/* Native scroll — sections reveal with framer-motion on scroll */
 
-.snap-container:active {
-  cursor: grabbing;
+/* Smooth scrollbar for the main container */
+div[style*="overflow-y: scroll"]::-webkit-scrollbar,
+div[style*="overflow-y:scroll"]::-webkit-scrollbar {
+  width: 4px;
 }
-
-.snap-section {
-  width: 100vw;
-  height: 100vh;
-  flex-shrink: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  position: relative;
-}
-
-/* Hide scrollbar for sections */
-.snap-section::-webkit-scrollbar {
-  width: 6px;
-}
-.snap-section::-webkit-scrollbar-track {
+div[style*="overflow-y: scroll"]::-webkit-scrollbar-track,
+div[style*="overflow-y:scroll"]::-webkit-scrollbar-track {
   background: transparent;
 }
-.snap-section::-webkit-scrollbar-thumb {
-  @apply bg-surface rounded-full border border-[rgba(0,229,255,0.2)];
+div[style*="overflow-y: scroll"]::-webkit-scrollbar-thumb,
+div[style*="overflow-y:scroll"]::-webkit-scrollbar-thumb {
+  background: rgba(0,229,255,0.2);
+  border-radius: 4px;
 }
-.snap-section::-webkit-scrollbar-thumb:hover {
-  @apply bg-cyan-accent/20;
+div[style*="overflow-y: scroll"]::-webkit-scrollbar-thumb:hover,
+div[style*="overflow-y:scroll"]::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,229,255,0.45);
 }
 
 /* ─── Section Indicator Dots ────────────────────────────────── */

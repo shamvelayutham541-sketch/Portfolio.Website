@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, useAnimation, useMotionValue, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
 import Navbar from './components/Navbar';
 import CustomCursor from './components/CustomCursor';
 import LoadingScreen from './components/LoadingScreen';
@@ -23,119 +23,84 @@ const SECTIONS = [
   { id: 'contact',        name: 'Contact', Component: Contact },
 ];
 
-function App() {
-  const [loading, setLoading]         = useState(true);
-  const [activeSection, setActiveSection] = useState(0);
-  const [showHint, setShowHint]       = useState(true);
-  const controls     = useAnimation();
-  const y            = useMotionValue(0);
-  const isAnimating  = useRef(false);
-  const wheelTimeout = useRef(null);
+/* ── Single section with cinematic reveal ── */
+function CinemaSection({ id, Component, index }) {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  });
 
-  // Loading screen — 1.5 s
+  // Smooth spring for all transforms
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 80,
+    damping: 20,
+    restDelta: 0.001,
+  });
+
+  // Entry: slides up from below, fades + unblurs
+  const y       = useTransform(smoothProgress, [0, 0.25, 0.75, 1], [60, 0, 0, -40]);
+  const opacity = useTransform(smoothProgress, [0, 0.18, 0.75, 1], [0,  1,  1,  0]);
+  const scale   = useTransform(smoothProgress, [0, 0.2,  0.8,  1], [0.94, 1, 1, 0.97]);
+  const blur    = useTransform(smoothProgress, [0, 0.2], [8, 0]);
+  const filter  = useTransform(blur, (v) => `blur(${v}px)`);
+
+  return (
+    <section
+      ref={ref}
+      id={`section-${id}`}
+      className="relative w-full"
+      style={{ minHeight: '100vh' }}
+    >
+      <motion.div
+        style={{ y, opacity, scale, filter, willChange: 'transform, opacity, filter' }}
+        className="w-full h-full"
+      >
+        <Component />
+      </motion.div>
+    </section>
+  );
+}
+
+/* ── Active section tracker via IntersectionObserver ── */
+function useActiveSection(count) {
+  const [active, setActive] = useState(0);
+  useEffect(() => {
+    const observers = [];
+    for (let i = 0; i < count; i++) {
+      const el = document.getElementById(`section-${SECTIONS[i].id}`);
+      if (!el) continue;
+      const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActive(i); },
+        { threshold: 0.4 }
+      );
+      obs.observe(el);
+      observers.push(obs);
+    }
+    return () => observers.forEach((o) => o.disconnect());
+  }, [count]);
+  return active;
+}
+
+function App() {
+  const [loading, setLoading] = useState(true);
+  const scrollRef = useRef(null);
+
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(t);
   }, []);
 
-  // Hide scroll hint after first move
-  useEffect(() => {
-    if (activeSection > 0) setShowHint(false);
-  }, [activeSection]);
+  const activeSection = useActiveSection(SECTIONS.length);
 
-  const getSectionY = useCallback(
-    (index) => -index * window.innerHeight,
-    []
-  );
+  // Progress bar driven by native scroll
+  const { scrollYProgress } = useScroll({ container: scrollRef });
+  const progressHeight = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
 
-  // Fast spring snap
   const navigateTo = useCallback((index) => {
-    if (isAnimating.current) return;
-    const clamped = Math.max(0, Math.min(SECTIONS.length - 1, index));
-    if (clamped === activeSection) return;
-
-    isAnimating.current = true;
-    setActiveSection(clamped);
-
-    controls.start({
-      y: getSectionY(clamped),
-      transition: {
-        type: 'spring',
-        stiffness: 500,   // high stiffness = fast
-        damping: 48,
-        mass: 0.6,
-      },
-    }).then(() => {
-      isAnimating.current = false;
-    });
-  }, [activeSection, controls, getSectionY]);
-
-  // Mouse wheel → vertical navigation
-  useEffect(() => {
-    const handleWheel = (e) => {
-      e.preventDefault();
-      if (wheelTimeout.current) return;
-      wheelTimeout.current = setTimeout(() => {
-        wheelTimeout.current = null;
-      }, 550);
-
-      if (e.deltaY > 10)       navigateTo(activeSection + 1);
-      else if (e.deltaY < -10) navigateTo(activeSection - 1);
-    };
-
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    return () => window.removeEventListener('wheel', handleWheel);
-  }, [activeSection, navigateTo]);
-
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-        e.preventDefault();
-        navigateTo(activeSection + 1);
-      } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-        e.preventDefault();
-        navigateTo(activeSection - 1);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeSection, navigateTo]);
-
-  // Touch swipe support
-  useEffect(() => {
-    let touchStartY = 0;
-    const onTouchStart = (e) => { touchStartY = e.touches[0].clientY; };
-    const onTouchEnd   = (e) => {
-      const delta = touchStartY - e.changedTouches[0].clientY;
-      if (Math.abs(delta) > 50) {
-        delta > 0 ? navigateTo(activeSection + 1) : navigateTo(activeSection - 1);
-      }
-    };
-    window.addEventListener('touchstart', onTouchStart, { passive: true });
-    window.addEventListener('touchend',   onTouchEnd,   { passive: true });
-    return () => {
-      window.removeEventListener('touchstart', onTouchStart);
-      window.removeEventListener('touchend',   onTouchEnd);
-    };
-  }, [activeSection, navigateTo]);
-
-  // Re-snap on resize
-  useEffect(() => {
-    const handleResize = () => controls.set({ y: getSectionY(activeSection) });
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [activeSection, controls, getSectionY]);
-
-  // Drag (swipe) support
-  const handleDragEnd = (_, info) => {
-    const threshold = window.innerHeight * 0.15;
-    if (info.offset.y < -threshold || info.velocity.y < -300) navigateTo(activeSection + 1);
-    else if (info.offset.y > threshold || info.velocity.y > 300) navigateTo(activeSection - 1);
-    else controls.start({ y: getSectionY(activeSection), transition: { type: 'spring', stiffness: 500, damping: 48, mass: 0.6 } });
-  };
-
-  const progressHeight = (activeSection / (SECTIONS.length - 1)) * 100;
+    const el = document.getElementById(`section-${SECTIONS[index].id}`);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
 
   return (
     <>
@@ -148,7 +113,7 @@ function App() {
             key="content"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.5 }}
             className="h-screen w-screen overflow-hidden relative"
           >
             <Navbar
@@ -157,28 +122,18 @@ function App() {
               sections={SECTIONS}
             />
 
-            {/* Vertical snap container */}
-            <motion.div
-              className="snap-container"
-              drag="y"
-              dragConstraints={{
-                top:    getSectionY(SECTIONS.length - 1),
-                bottom: 0,
-              }}
-              dragElastic={0.06}
-              dragMomentum={false}
-              onDragEnd={handleDragEnd}
-              animate={controls}
-              style={{ y }}
+            {/* Native smooth scroll container */}
+            <div
+              ref={scrollRef}
+              className="w-full h-screen overflow-y-scroll overflow-x-hidden"
+              style={{ scrollBehavior: 'smooth' }}
             >
-              {SECTIONS.map(({ id, Component }) => (
-                <div key={id} id={`section-${id}`} className="snap-section">
-                  <Component />
-                </div>
+              {SECTIONS.map(({ id, Component }, index) => (
+                <CinemaSection key={id} id={id} Component={Component} index={index} />
               ))}
-            </motion.div>
+            </div>
 
-            {/* Section indicator dots — right side (vertical) */}
+            {/* Section indicator dots */}
             <div className="section-dots">
               {SECTIONS.map((section, index) => (
                 <div key={section.id} className="section-dot-wrapper">
@@ -192,23 +147,23 @@ function App() {
               ))}
             </div>
 
-            {/* Vertical progress bar — right edge */}
+            {/* Vertical progress bar */}
             <div className="snap-progress-track">
-              <div
+              <motion.div
                 className="snap-progress-fill"
-                style={{ height: `${progressHeight}%` }}
+                style={{ height: progressHeight }}
               />
             </div>
 
             {/* Scroll hint */}
             <AnimatePresence>
-              {showHint && (
+              {activeSection === 0 && (
                 <motion.div
                   className="scroll-hint"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  transition={{ delay: 1, duration: 0.6 }}
+                  transition={{ delay: 1.2, duration: 0.6 }}
                 >
                   <span>Scroll to explore</span>
                   <span className="scroll-hint-arrow">↓</span>
