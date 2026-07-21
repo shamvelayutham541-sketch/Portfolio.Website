@@ -168,7 +168,7 @@ function BentoCard({ project, index }) {
           <div className="w-full h-full bg-[radial-gradient(circle_at_center,_rgba(255,215,0,0.05)_0%,_transparent_70%)]" />
         ) : (
           <img
-            src={project.image}
+            src={project.image.startsWith('/') ? `${import.meta.env.BASE_URL}${project.image.slice(1)}` : project.image}
             alt={project.title}
             className="w-full h-full object-cover"
             style={{ opacity: hovered ? 0.65 : 0.45, transition: 'opacity 0.5s ease' }}
@@ -441,7 +441,7 @@ export default function Projects() {
           className="text-center mt-14"
         >
           <a
-            href="https://github.com"
+            href="https://github.com/shamvelayutham541-sketch"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-3 px-7 py-3 rounded-full font-mono text-sm tracking-widest uppercase transition-all duration-300 hover:scale-105"

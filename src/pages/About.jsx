@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Box } from '@react-three/drei';
 import GradientBlur from '../components/GradientBlur';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 const pageVariants = {
   initial: { opacity: 0, x: 100 },
@@ -23,15 +24,18 @@ export default function About() {
       <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         {/* 3D Avatar/Card */}
         <div className="order-2 lg:order-1 h-[400px] lg:h-[500px] w-full relative z-10 border border-white/10 rounded-2xl bg-surface/30 backdrop-blur-sm overflow-hidden">
-          <Canvas camera={{ position: [0, 0, 4] }}>
-            <ambientLight intensity={0.5} />
-            <pointLight position={[10, 10, 10]} />
-            <Box args={[2, 2, 2]} rotation={[0.5, 0.5, 0]}>
-              <meshStandardMaterial color="#7c3aed" wireframe />
-            </Box>
-            <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={1} />
-          </Canvas>
+          <ErrorBoundary>
+            <Canvas camera={{ position: [0, 0, 4] }}>
+              <ambientLight intensity={0.5} />
+              <pointLight position={[10, 10, 10]} />
+              <Box args={[2, 2, 2]} rotation={[0.5, 0.5, 0]}>
+                <meshStandardMaterial color="#7c3aed" wireframe />
+              </Box>
+              <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={1} />
+            </Canvas>
+          </ErrorBoundary>
         </div>
+
 
         {/* Text Content */}
         <div className="order-1 lg:order-2 space-y-8 z-10">
