@@ -379,19 +379,68 @@ function HighlightCard({ icon: Icon, title, subtitle, delay, accent = '#00e5ff' 
         transition={{ duration: 0.5, delay }}
         className="relative rounded-xl p-4 flex flex-col gap-2 cursor-default overflow-hidden"
         style={{
-          background: 'rgba(10,18,35,0.88)',
-          boxShadow: `0 4px 24px rgba(0,0,0,0.5), 0 0 20px ${accent}18`,
-          backdropFilter: 'blur(12px)',
+          background: 'rgba(8,14,30,0.92)',
+          boxShadow: `0 4px 32px rgba(0,0,0,0.6), 0 0 28px ${accent}22`,
+          backdropFilter: 'blur(14px)',
         }}
       >
         <LaserBorder color={accent} duration={3.2} radius="12px" size={1.5} />
+
+        {/* Ambient glow blob */}
+        <div
+          className="absolute -top-4 -right-4 w-20 h-20 rounded-full pointer-events-none"
+          style={{
+            background: `radial-gradient(circle, ${accent}44 0%, transparent 70%)`,
+            zIndex: 1,
+            filter: 'blur(10px)',
+          }}
+        />
+
         <div className="relative flex items-center gap-3" style={{ zIndex: 3 }}>
-          <div className="p-2 rounded-lg" style={{ background: `${accent}18` }}>
-            <Icon size={20} style={{ color: accent }} />
+          {/* Icon box */}
+          <div
+            className="p-2.5 rounded-xl shrink-0"
+            style={{
+              background: `linear-gradient(135deg, ${accent}22, ${accent}08)`,
+              border: `1px solid ${accent}33`,
+              boxShadow: `0 0 12px ${accent}22`,
+            }}
+          >
+            <Icon size={20} style={{ color: accent, filter: `drop-shadow(0 0 6px ${accent})` }} />
           </div>
+
           <div>
-            <p className="text-white font-bold text-sm leading-tight">{title}</p>
-            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>{subtitle}</p>
+            {/* Title — Syne bold with accent gradient */}
+            <p
+              style={{
+                fontFamily: "'Syne', sans-serif",
+                fontWeight: 800,
+                fontSize: '0.88rem',
+                letterSpacing: '0.04em',
+                lineHeight: 1.2,
+                background: `linear-gradient(120deg, #ffffff 0%, ${accent} 60%, #ffffff 100%)`,
+                backgroundSize: '200% auto',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+                animation: 'shimmerText 4s linear infinite',
+              }}
+            >
+              {title}
+            </p>
+            {/* Subtitle — mono small caps */}
+            <p
+              style={{
+                fontFamily: "'Space Mono', monospace",
+                fontSize: '0.65rem',
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                color: `${accent}99`,
+                marginTop: '0.2rem',
+              }}
+            >
+              {subtitle}
+            </p>
           </div>
         </div>
       </motion.div>
