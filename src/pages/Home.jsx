@@ -455,7 +455,7 @@ export default function Home() {
       }} />
 
       {/* ── Hero name + badge — above photos ── */}
-      <div className="relative z-20 flex flex-col items-center justify-center pt-16 pb-2 px-4 text-center">
+      <div className="relative z-20 flex flex-col items-center justify-center pt-32 pb-2 px-4 text-center">
         {/* Big name */}
         <motion.h1
           initial={{ opacity: 0, y: -30 }}
