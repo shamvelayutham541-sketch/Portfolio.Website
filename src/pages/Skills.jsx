@@ -7,9 +7,6 @@ const techSkills = [
   { name: 'C++',         level: 82, icon: '⚙️', color: '#38bdf8' },
   { name: 'JavaScript',  level: 80, icon: '⚡', color: '#facc15' },
   { name: 'HTML / CSS',  level: 95, icon: '🌐', color: '#f97316' },
-  { name: 'SQL',         level: 72, icon: '🗄️', color: '#a78bfa' },
-  { name: 'Git',         level: 78, icon: '🔀', color: '#34d399' },
-  { name: 'React',       level: 76, icon: '⚛️', color: '#61dafb' },
 ];
 
 const softSkills = [

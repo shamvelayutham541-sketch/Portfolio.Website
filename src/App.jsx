@@ -24,37 +24,35 @@ const SECTIONS = [
 ];
 
 /* ── Single section with cinematic reveal ── */
-function CinemaSection({ id, Component, index }) {
+function CinemaSection({ id, Component, scrollContainer }) {
   const ref = useRef(null);
+
   const { scrollYProgress } = useScroll({
     target: ref,
+    container: scrollContainer,
     offset: ['start end', 'end start'],
   });
 
-  // Smooth spring for all transforms
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 80,
-    damping: 20,
+    stiffness: 60,
+    damping: 18,
     restDelta: 0.001,
   });
 
-  // Entry: slides up from below, fades + unblurs
-  const y       = useTransform(smoothProgress, [0, 0.25, 0.75, 1], [60, 0, 0, -40]);
-  const opacity = useTransform(smoothProgress, [0, 0.18, 0.75, 1], [0,  1,  1,  0]);
-  const scale   = useTransform(smoothProgress, [0, 0.2,  0.8,  1], [0.94, 1, 1, 0.97]);
-  const blur    = useTransform(smoothProgress, [0, 0.2], [8, 0]);
-  const filter  = useTransform(blur, (v) => `blur(${v}px)`);
+  const y       = useTransform(smoothProgress, [0, 0.2, 0.8, 1], [55,  0,  0, -35]);
+  const opacity = useTransform(smoothProgress, [0, 0.15, 0.8, 1], [0,   1,  1,  0]);
+  const scale   = useTransform(smoothProgress, [0, 0.2,  0.8,  1], [0.95, 1, 1, 0.97]);
+  const blurVal = useTransform(smoothProgress, [0, 0.2], [10, 0]);
+  const filter  = useTransform(blurVal, (v) => `blur(${v}px)`);
 
   return (
     <section
       ref={ref}
       id={`section-${id}`}
-      className="relative w-full"
-      style={{ minHeight: '100vh' }}
+      style={{ minHeight: '100vh', width: '100%', position: 'relative' }}
     >
       <motion.div
         style={{ y, opacity, scale, filter, willChange: 'transform, opacity, filter' }}
-        className="w-full h-full"
       >
         <Component />
       </motion.div>
@@ -63,22 +61,27 @@ function CinemaSection({ id, Component, index }) {
 }
 
 /* ── Active section tracker via IntersectionObserver ── */
-function useActiveSection(count) {
+function useActiveSection(scrollContainer) {
   const [active, setActive] = useState(0);
+
   useEffect(() => {
+    if (!scrollContainer.current) return;
     const observers = [];
-    for (let i = 0; i < count; i++) {
-      const el = document.getElementById(`section-${SECTIONS[i].id}`);
-      if (!el) continue;
+
+    SECTIONS.forEach((section, i) => {
+      const el = document.getElementById(`section-${section.id}`);
+      if (!el) return;
       const obs = new IntersectionObserver(
         ([entry]) => { if (entry.isIntersecting) setActive(i); },
-        { threshold: 0.4 }
+        { root: scrollContainer.current, threshold: 0.35 }
       );
       obs.observe(el);
       observers.push(obs);
-    }
+    });
+
     return () => observers.forEach((o) => o.disconnect());
-  }, [count]);
+  }, [scrollContainer]);
+
   return active;
 }
 
@@ -91,15 +94,20 @@ function App() {
     return () => clearTimeout(t);
   }, []);
 
-  const activeSection = useActiveSection(SECTIONS.length);
+  const activeSection = useActiveSection(scrollRef);
 
-  // Progress bar driven by native scroll
+  // Overall scroll progress for the progress bar
   const { scrollYProgress } = useScroll({ container: scrollRef });
   const progressHeight = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
 
   const navigateTo = useCallback((index) => {
     const el = document.getElementById(`section-${SECTIONS[index].id}`);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (el && scrollRef.current) {
+      scrollRef.current.scrollTo({
+        top: el.offsetTop,
+        behavior: 'smooth',
+      });
+    }
   }, []);
 
   return (
@@ -114,7 +122,7 @@ function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="h-screen w-screen overflow-hidden relative"
+            style={{ height: '100vh', width: '100vw', overflow: 'hidden', position: 'relative' }}
           >
             <Navbar
               activeSection={activeSection}
@@ -122,14 +130,26 @@ function App() {
               sections={SECTIONS}
             />
 
-            {/* Native smooth scroll container */}
+            {/* Scroll container — fills below navbar */}
             <div
               ref={scrollRef}
-              className="w-full h-screen overflow-y-scroll overflow-x-hidden"
-              style={{ scrollBehavior: 'smooth' }}
+              style={{
+                position: 'absolute',
+                top: 80,        // navbar height
+                left: 0,
+                right: 0,
+                bottom: 0,
+                overflowY: 'scroll',
+                overflowX: 'hidden',
+              }}
             >
-              {SECTIONS.map(({ id, Component }, index) => (
-                <CinemaSection key={id} id={id} Component={Component} index={index} />
+              {SECTIONS.map(({ id, Component }) => (
+                <CinemaSection
+                  key={id}
+                  id={id}
+                  Component={Component}
+                  scrollContainer={scrollRef}
+                />
               ))}
             </div>
 

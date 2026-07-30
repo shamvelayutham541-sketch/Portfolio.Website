@@ -187,6 +187,18 @@ div[style*="overflow-y:scroll"]::-webkit-scrollbar-thumb:hover {
   @apply bg-cyan-accent/20;
 }
 
+/* ─── Premium Gradient Animation ───────────────────────────── */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient {
+  background-size: 300% 300%;
+  animation: gradientShift 8s ease infinite;
+}
+
 /* ─── Mobile responsiveness for dots ────────────────────────── */
 @media (max-width: 768px) {
   .section-dots {

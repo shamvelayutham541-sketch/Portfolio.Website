@@ -486,43 +486,36 @@ function BulletRow({ icon: Icon, label, value, delay }) {
       >
         <Icon size={11} style={{ color: '#00e5ff' }} />
       </span>
-      <p className="leading-snug">
-        {/* Label — big, stylish, gradient */}
+      <p className="text-sm leading-relaxed" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
         <span
           style={{
-            display: 'block',
             fontFamily: "'Syne', sans-serif",
             fontWeight: 800,
-            fontSize: '0.82rem',
-            letterSpacing: '0.18em',
+            fontSize: '0.78rem',
+            letterSpacing: '0.1em',
             textTransform: 'uppercase',
             background: 'linear-gradient(90deg, #00e5ff 0%, #a78bfa 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
-            lineHeight: 1.3,
+            marginRight: '0.4rem',
           }}
         >
-          {label}
+          {label}:
         </span>
-        {/* Value — light, readable */}
-        <span
-          style={{
-            display: 'block',
-            fontFamily: "'Space Grotesk', sans-serif",
-            fontWeight: 300,
-            fontSize: '0.8rem',
-            color: 'rgba(255,255,255,0.65)',
-            lineHeight: 1.5,
-            marginTop: '0.1rem',
-          }}
-        >
+        <span style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 300, fontSize: '0.82rem' }}>
           {value}
         </span>
       </p>
     </motion.div>
   );
 }
+
+const PHOTOS = [
+  { src: `${import.meta.env.BASE_URL}photos/photo1.png`, alt: 'Sham at the beach' },
+  { src: `${import.meta.env.BASE_URL}photos/photo2.png`, alt: 'Sham in floral shirt outdoors' },
+  { src: `${import.meta.env.BASE_URL}photos/photo3.png`, alt: 'Sham on the beach' },
+];
 
 /* ─── Main Home component ───────────────────────────────────── */
 export default function Home() {
@@ -601,9 +594,9 @@ export default function Home() {
 
       {/* ── Top photo strip ── */}
       <div className="relative z-20 flex items-end justify-center gap-6 pt-6 pb-4 px-4" style={{ perspective: 900 }}>
-        <PhotoCard src={null} alt="photo 1" rotate={-8}  delay={0.1} translateY={12} />
-        <PhotoCard src={null} alt="photo 2" rotate={0}   delay={0.2} translateY={-8} />
-        <PhotoCard src={null} alt="photo 3" rotate={7}   delay={0.3} translateY={10} />
+        <PhotoCard src={PHOTOS[0].src} alt={PHOTOS[0].alt} rotate={-8}  delay={0.1} translateY={12} />
+        <PhotoCard src={PHOTOS[1].src} alt={PHOTOS[1].alt} rotate={0}   delay={0.2} translateY={-8} />
+        <PhotoCard src={PHOTOS[2].src} alt={PHOTOS[2].alt} rotate={7}   delay={0.3} translateY={10} />
       </div>
 
       {/* ── Main content grid ── */}

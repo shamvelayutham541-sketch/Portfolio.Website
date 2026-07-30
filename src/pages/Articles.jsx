@@ -113,10 +113,16 @@ export default function Articles() {
                 </a>
               </div>
               
-              <div className="hidden lg:flex w-1/3 aspect-square bg-gradient-to-br from-surface to-background border border-white/5 rounded-2xl items-center justify-center relative overflow-hidden group-hover:border-cyan-accent/20 transition-colors">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-cyan-accent/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <BookOpen size={80} className="text-white/5 group-hover:text-cyan-accent/20 transition-all duration-500 group-hover:scale-110" />
-                <Sparkles size={40} className="absolute top-8 right-8 text-cyan-accent/10 animate-pulse" />
+              <div className="featured-card hidden lg:flex w-1/3 aspect-square bg-gradient-to-br from-surface to-background border border-white/5 rounded-2xl relative overflow-hidden group-hover:border-cyan-accent/20 transition-colors">
+                <img
+                  src={`${import.meta.env.BASE_URL}photos/photo1.png`}
+                  alt="Featured Article"
+                  className="featured-image absolute inset-0 w-full h-full object-cover object-center transition-transform duration-500 hover:scale-105"
+                  onError={(e) => {
+                    e.target.src = '/photos/photo2.png';
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10" />
               </div>
             </div>
           </div>

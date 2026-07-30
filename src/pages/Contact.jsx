@@ -1,8 +1,29 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
+import emailjs from '@emailjs/browser';
 import ParticleBackground from '../components/ParticleBackground';
-import { CheckCircle, Mail, MapPin } from 'lucide-react';
+import { CheckCircle, Mail, MapPin, AlertCircle } from 'lucide-react';
 import { Tilt } from 'react-tilt';
+
+// ============================================================
+// EmailJS Configuration
+// Follow these steps to set up EmailJS:
+//
+// 1. Go to https://www.emailjs.com/ and create a FREE account
+// 2. Add an Email Service (Gmail) → Copy the "Service ID"
+// 3. Create an Email Template with these variables:
+//    - {{from_name}}   → Sender's name
+//    - {{from_email}}   → Sender's email
+//    - {{subject}}      → Email subject
+//    - {{message}}      → Email message
+//    - {{to_email}}     → Your email (shamvelayutham541@gmail.com)
+//    Set "To Email" in template to: shamvelayutham541@gmail.com
+// 4. Go to Account → General → Copy "Public Key"
+// 5. Replace the values below:
+// ============================================================
+const EMAILJS_SERVICE_ID = 'service_portfolio';   // Replace with your Service ID
+const EMAILJS_TEMPLATE_ID = 'template_contact';   // Replace with your Template ID
+const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';      // Replace with your Public Key
 
 const pageVariants = {
   initial: { opacity: 0, scale: 0.9 },
@@ -28,16 +49,41 @@ const InteractiveCard = ({ children, className, tiltMax = 10 }) => {
 };
 
 export default function Contact() {
+  const formRef = useRef();
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
-  const [status, setStatus] = useState(''); // 'idle', 'sending', 'success', 'error'
+  const [status, setStatus] = useState('idle'); // 'idle', 'sending', 'success', 'error'
+  const [errorMsg, setErrorMsg] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus('sending');
-    setTimeout(() => {
+    setErrorMsg('');
+
+    // Template parameters to send via EmailJS
+    const templateParams = {
+      from_name: formData.name,
+      from_email: formData.email,
+      subject: formData.subject,
+      message: formData.message,
+      to_email: 'shamvelayutham541@gmail.com',
+    };
+
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        templateParams,
+        EMAILJS_PUBLIC_KEY
+      );
       setStatus('success');
       setFormData({ name: '', email: '', subject: '', message: '' });
-    }, 1500);
+    } catch (error) {
+      console.error('EmailJS Error:', error);
+      setStatus('error');
+      setErrorMsg(
+        error?.text || 'Failed to send message. Please try again or email me directly.'
+      );
+    }
   };
 
   const handleChange = (e) => {
@@ -110,7 +156,19 @@ export default function Contact() {
                 </button>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+                {/* Error Banner */}
+                {status === 'error' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center gap-3 bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3 text-red-400 text-sm"
+                  >
+                    <AlertCircle size={18} className="flex-shrink-0" />
+                    <span>{errorMsg}</span>
+                  </motion.div>
+                )}
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <input
                     type="text"
@@ -155,9 +213,17 @@ export default function Contact() {
                 <button
                   type="submit"
                   disabled={status === 'sending'}
-                  className="px-8 py-3 bg-cyan-accent text-background font-bold rounded-lg hover:bg-cyan-accent/90 transition-all shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_30px_rgba(0,229,255,0.6)] disabled:opacity-70 mt-4 active:scale-95 hover:-translate-y-1"
+                  className="px-8 py-3 bg-cyan-accent text-background font-bold rounded-lg hover:bg-cyan-accent/90 transition-all shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_30px_rgba(0,229,255,0.6)] disabled:opacity-70 mt-4 active:scale-95 hover:-translate-y-1 cursor-pointer flex items-center gap-2"
                 >
-                  {status === 'sending' ? 'Sending...' : 'Send Message'}
+                  {status === 'sending' ? (
+                    <>
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      Sending...
+                    </>
+                  ) : 'Send Message'}
                 </button>
               </form>
             )}
@@ -168,3 +234,4 @@ export default function Contact() {
     </motion.div>
   );
 }
+
