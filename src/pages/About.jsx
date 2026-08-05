@@ -36,9 +36,20 @@ export default function About() {
             <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-3xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-500" />
             <div className="relative p-1 bg-gradient-to-r from-cyan-500/30 via-purple-500/30 to-pink-500/30 rounded-3xl">
               <img
-                src={`${import.meta.env.BASE_URL}photos/sham_about_left.jpg`}
+                src={`${import.meta.env.BASE_URL}photos/sham_profile.jpg`}
                 alt="Sham - About Me"
                 className="w-full h-[450px] lg:h-[550px] object-cover object-top rounded-[20px]"
+                loading="eager"
+                onError={(e) => {
+                  const fallbacks = [
+                    `${import.meta.env.BASE_URL}photos/sham_about.jpg`,
+                    `${import.meta.env.BASE_URL}photos/about_right.jpg`,
+                    `${import.meta.env.BASE_URL}photos/photo2.png`,
+                  ];
+                  const current = e.target.src;
+                  const next = fallbacks.find((f) => !current.includes(f.replace(/^\//, '').split('/').slice(-2).join('/')));
+                  if (next) e.target.src = next;
+                }}
               />
             </div>
           </motion.div>
