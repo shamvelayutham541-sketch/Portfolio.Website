@@ -20,8 +20,32 @@ export default function About() {
       <GradientBlur />
 
       <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        {/* Text Content - Left Side */}
-        <div className="order-2 lg:order-1 space-y-8 z-10">
+        {/* Image Box - Left Side */}
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.3, duration: 0.8 }}
+          className="order-1 lg:order-1 flex flex-col gap-6"
+        >
+          {/* Main Photo */}
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+            className="group relative rounded-3xl overflow-hidden shadow-2xl"
+          >
+            <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-3xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-500" />
+            <div className="relative p-1 bg-gradient-to-r from-cyan-500/30 via-purple-500/30 to-pink-500/30 rounded-3xl">
+              <img
+                src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=handsome%20young%20South%20Indian%20man%20in%20his%2020s%2C%20curly%20black%20hair%2C%20short%20beard%20and%20moustache%2C%20wearing%20white%20button-up%20shirt%20with%20purple%20brown%20floral%20print%2C%20rolled%20up%20sleeves%2C%20dark%20brown%20trousers%2C%20gold%20chain%2C%20standing%20on%20sunny%20rooftop%20terrace%20with%20yellow%20concrete%20railing%2C%20lush%20green%20palm%20trees%20tropical%20foliage%20in%20background%2C%20looking%20to%20the%20side%20with%20gentle%20smile%2C%20bright%20daylight%2C%20candid%20portrait%20photo%2C%20realistic%2C%20high%20quality&image_size=portrait_4_3"
+                alt="Sham - About Me"
+                className="w-full h-[450px] lg:h-[550px] object-cover object-top rounded-[20px]"
+              />
+            </div>
+          </motion.div>
+        </motion.div>
+
+        {/* Text Content - Right Side */}
+        <div className="order-2 lg:order-2 space-y-8 z-10">
           <div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -110,30 +134,6 @@ export default function About() {
             </motion.div>
           </div>
         </div>
-
-        {/* Image Box - Right Side */}
-        <motion.div
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3, duration: 0.8 }}
-          className="order-1 lg:order-2 flex flex-col gap-6"
-        >
-          {/* Main Photo */}
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.3 }}
-            className="group relative rounded-3xl overflow-hidden shadow-2xl"
-          >
-            <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-3xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-500" />
-            <div className="relative p-1 bg-gradient-to-r from-cyan-500/30 via-purple-500/30 to-pink-500/30 rounded-3xl">
-              <img
-                src={`${import.meta.env.BASE_URL}photos/sham_about.jpg`}
-                alt="Sham - About Me"
-                className="w-full h-[450px] lg:h-[550px] object-cover object-top rounded-[20px]"
-              />
-            </div>
-          </motion.div>
-        </motion.div>
       </div>
     </motion.div>
   );
