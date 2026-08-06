@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Award, ShieldCheck, Brain, Database, MessageSquare, Fingerprint, Scan, Lock, Unlock, Download, ExternalLink } from 'lucide-react';
+import { Award, ShieldCheck, Brain, Database, MessageSquare, Fingerprint, Scan, Lock, Unlock, Download, ExternalLink, BarChart3, Code2 } from 'lucide-react';
 import GradientBlur from '../components/GradientBlur';
 
 const pageVariants = {
@@ -94,6 +94,32 @@ const certificates = [
     pattern: 'hexagons',
     theme: 'dark',
     pdfUrl: `${import.meta.env.BASE_URL}certificates/Building_Generative_AI_Skills_Developer_Certificate.pdf`
+  },
+  {
+    id: 'DATA-2026-007',
+    title: 'Career Essentials in Data Analysis',
+    topic: 'Excel Fundamentals, Power BI Dashboards, SQL Queries, Statistical Analysis, Data Visualization, and Storytelling with Data',
+    icon: BarChart3,
+    color: 'from-blue-500 to-cyan-600',
+    accent: '#06b6d4',
+    date: 'August 06, 2026',
+    signatory: { name: 'Microsoft & LinkedIn', title: 'Career Essentials Program' },
+    pattern: 'grid',
+    theme: 'dark',
+    pdfUrl: `${import.meta.env.BASE_URL}certificates/Career_Essentials_Data_Analysis_Microsoft_LinkedIn.pdf`
+  },
+  {
+    id: 'MLPY-2026-008',
+    title: 'Machine Learning with Python Professional Certificate',
+    topic: 'NumPy, Pandas, Matplotlib, Scikit-learn, Supervised & Unsupervised Learning, Regression, Classification, Clustering, and Model Deployment',
+    icon: Code2,
+    color: 'from-emerald-500 to-teal-600',
+    accent: '#10b981',
+    date: 'August 06, 2026',
+    signatory: { name: 'Anaconda Inc.', title: 'Official Professional Certificate' },
+    pattern: 'circuit',
+    theme: 'dark',
+    pdfUrl: `${import.meta.env.BASE_URL}certificates/ML_Python_Professional_Certificate_Anaconda.pdf`
   }
 ];
 
