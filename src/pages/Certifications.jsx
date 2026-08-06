@@ -81,6 +81,19 @@ const certificates = [
     pattern: 'circuit',
     theme: 'dark',
     pdfUrl: `${import.meta.env.BASE_URL}certificates/AI_ML_Advance_Skills_Certificate.pdf`
+  },
+  {
+    id: 'GENAI-2026-006',
+    title: 'Building Generative AI Skills for Developers',
+    topic: 'LLM Foundations, Prompt Engineering, RAG, Fine-Tuning, and GenAI Application Development',
+    icon: Database,
+    color: 'from-violet-500 to-fuchsia-600',
+    accent: '#a855f7',
+    date: 'August 06, 2026',
+    signatory: { name: 'LinkedIn Learning', title: 'Official Program Certificate' },
+    pattern: 'hexagons',
+    theme: 'dark',
+    pdfUrl: `${import.meta.env.BASE_URL}certificates/Building_Generative_AI_Skills_Developer_Certificate.pdf`
   }
 ];
 
@@ -100,136 +113,149 @@ const CertificateCard = ({ cert, isUnlocked }) => {
     }
   };
 
-  return (
-    <motion.div
-      variants={certVariants}
-      initial="hidden"
-      animate={isUnlocked ? "visible" : "hidden"}
-      whileHover={isUnlocked ? { y: -10, transition: { duration: 0.3 } } : {}}
-      className="relative w-full max-w-2xl aspect-[1.4/1] group cursor-default"
-    >
-      {/* Decorative Outer Glow */}
-      <div className={`absolute -inset-1 bg-gradient-to-r ${cert.color} rounded-2xl blur opacity-10 group-hover:opacity-30 transition duration-1000`}></div>
-      
-      {/* Main Certificate Body */}
-      <div 
-        className={`relative h-full w-full border ${isLight ? 'border-gray-200' : 'border-white/10'} rounded-2xl overflow-hidden p-8 flex flex-col justify-between shadow-2xl transition-all duration-500`}
-        style={{ 
-          background: isLight 
+  const renderInnerCard = () => {
+    if (cert.pdfUrl) {
+      return (
+        <div className="relative h-full w-full flex flex-col rounded-2xl overflow-hidden bg-white text-gray-900 border border-gray-200 shadow-xl">
+          <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white shrink-0">
+            <div className="flex items-center gap-2 min-w-0">
+              <div className={`p-1.5 rounded-md bg-gradient-to-br ${cert.color} shrink-0`}>
+                <cert.icon size={14} className="text-white" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-[10px] font-mono tracking-[0.2em] uppercase text-gray-500 leading-none">
+                  Ref: {cert.id}
+                </p>
+                <p className="text-[12px] font-bold text-gray-800 truncate leading-tight mt-0.5 max-w-[36ch]">
+                  {cert.title}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <a
+                href={cert.pdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="View Certificate PDF"
+                className="p-1.5 rounded-md border border-gray-200 text-gray-500 hover:border-blue-400 hover:text-blue-500 transition-colors duration-200"
+              >
+                <ExternalLink size={14} />
+              </a>
+              <a
+                href={cert.pdfUrl}
+                download
+                title="Download Certificate PDF"
+                className="p-1.5 rounded-md border border-gray-200 text-gray-500 hover:border-emerald-400 hover:text-emerald-500 transition-colors duration-200"
+              >
+                <Download size={14} />
+              </a>
+            </div>
+          </div>
+
+          <div className="flex-1 w-full bg-white overflow-hidden relative">
+            <iframe
+              src={cert.pdfUrl}
+              title={cert.title}
+              className="w-full h-full border-0 block"
+              loading="lazy"
+            />
+          </div>
+
+          <div className="flex items-center justify-between px-4 py-1.5 border-t border-gray-200 bg-gray-50 shrink-0">
+            <p className="text-[10px] font-mono text-gray-600 leading-none">
+              <span className="text-emerald-600 font-semibold">●</span> {cert.signatory.name} — {cert.signatory.title}
+            </p>
+            <div className="flex items-center gap-1 text-[10px] font-mono text-gray-600 leading-none">
+              <ShieldCheck size={12} className="text-emerald-600" />
+              <span>{cert.date}</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div
+        className={`relative h-full w-full rounded-2xl overflow-hidden p-6 flex flex-col justify-between shadow-xl border ${isLight ? 'border-gray-200' : 'border-white/10'}`}
+        style={{
+          background: isLight
             ? `radial-gradient(circle at top left, ${cert.accent}10 0%, #ffffff 70%)`
             : `radial-gradient(circle at top left, ${cert.accent}15 0%, #0a0a0f 60%)`,
-          backgroundColor: isLight ? '#ffffff' : '#0a0a0f'
+          backgroundColor: isLight ? '#ffffff' : '#0a0a0f',
         }}
       >
-        
-        {/* Dynamic Stylized Background Pattern */}
-        <div className={`absolute inset-0 ${isLight ? 'opacity-30' : 'opacity-10'} pointer-events-none transition-transform duration-1000 group-hover:scale-110`}>
+        <div className={`absolute inset-0 ${isLight ? 'opacity-30' : 'opacity-10'} pointer-events-none`}>
           <div className="absolute inset-0" style={{ backgroundImage: getPattern(), backgroundSize: cert.pattern === 'waves' ? '100% 20px' : 'auto' }}></div>
           <div className={`absolute top-0 right-0 w-80 h-80 bg-gradient-to-br ${isLight ? 'from-gray-100' : 'from-white'} to-transparent rounded-full -translate-y-1/2 translate-x-1/2 blur-[100px] opacity-5`}></div>
         </div>
 
-        {/* Header */}
         <div className="flex justify-between items-start z-10">
           <div className="flex items-center gap-3">
-            <div className={`p-3 rounded-xl bg-gradient-to-br ${cert.color} shadow-lg ${isLight ? 'shadow-gray-200' : 'shadow-black/40'}`}>
-              <cert.icon size={24} className="text-white" />
+            <div className={`p-2.5 rounded-lg bg-gradient-to-br ${cert.color} shadow-lg ${isLight ? 'shadow-gray-200' : 'shadow-black/40'}`}>
+              <cert.icon size={20} className="text-white" />
             </div>
             <div>
               <h4 className={`text-[10px] font-mono tracking-[0.3em] uppercase ${isLight ? 'text-gray-400' : 'text-gray-500'}`}>Professional Series</h4>
               <p className={`text-xs font-mono ${isLight ? 'text-gray-600' : 'text-white/80'}`}>Ref: {cert.id}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            {cert.pdfUrl && (
-              <>
-                <a
-                  href={cert.pdfUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title="View Certificate PDF"
-                  className={`p-2 rounded-lg border backdrop-blur-sm transition-all duration-300 group-hover:scale-110 ${isLight ? 'border-gray-200 text-gray-400 hover:border-amber-400 hover:text-amber-500' : 'border-white/10 text-white/40 hover:border-cyan-accent hover:text-cyan-accent'}`}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <ExternalLink size={16} />
-                </a>
-                <a
-                  href={cert.pdfUrl}
-                  download
-                  title="Download Certificate PDF"
-                  className={`p-2 rounded-lg border backdrop-blur-sm transition-all duration-300 group-hover:scale-110 ${isLight ? 'border-gray-200 text-gray-400 hover:border-emerald-400 hover:text-emerald-500' : 'border-white/10 text-white/40 hover:border-emerald-400 hover:text-emerald-400'}`}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Download size={16} />
-                </a>
-              </>
-            )}
-            <Award size={32} className={`${isLight ? 'text-gray-200' : 'text-white/10'} group-hover:text-cyan-accent/20 transition-colors`} />
-          </div>
+          <Award size={28} className={isLight ? 'text-gray-200' : 'text-white/10'} />
         </div>
 
-        {/* Content */}
-        <div className="flex flex-col items-center text-center space-y-4 z-10">
-          <motion.div 
-            initial={{ scaleX: 0 }}
-            animate={isUnlocked ? { scaleX: 1 } : { scaleX: 0 }}
-            transition={{ delay: 0.5, duration: 1 }}
-            className={`w-16 h-px ${isLight ? 'bg-gray-200' : 'bg-gradient-to-r from-transparent via-gray-600 to-transparent'}`} 
-          />
+        <div className="flex flex-col items-center text-center space-y-3 z-10">
+          <div className={`w-14 h-px ${isLight ? 'bg-gray-200' : 'bg-gradient-to-r from-transparent via-gray-600 to-transparent'}`} />
           <p className={`text-[10px] font-mono uppercase tracking-[0.5em] ${isLight ? 'text-gray-400' : 'text-gray-400'}`}>This certifies that</p>
-          <h2 className={`text-4xl md:text-5xl font-extrabold font-syne tracking-tight ${isLight ? 'text-gray-900' : 'text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400'}`}>
+          <h2 className={`text-3xl font-extrabold tracking-tight ${isLight ? 'text-gray-900' : 'text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400'}`}>
             Sham B
           </h2>
           <p className={`text-[10px] font-mono uppercase tracking-[0.2em] ${isLight ? 'text-gray-400' : 'text-gray-500'}`}>has successfully mastered the concepts of</p>
-          <div className="relative">
-            <h3 className={`text-xl md:text-2xl font-bold font-grotesk ${isLight ? 'text-gray-800' : 'text-white'} group-hover:text-cyan-accent transition-colors duration-500`}>
-              {cert.title}
-            </h3>
-            <div className={`absolute -bottom-2 left-0 right-0 h-0.5 bg-gradient-to-r ${cert.color} opacity-30`}></div>
+          <div>
+            <h3 className={`text-lg md:text-xl font-bold ${isLight ? 'text-gray-800' : 'text-white'}`}>{cert.title}</h3>
           </div>
-          <p className={`text-sm ${isLight ? 'text-gray-600' : 'text-gray-400'} font-light max-w-md italic`}>
+          <p className={`text-xs ${isLight ? 'text-gray-600' : 'text-gray-400'} font-light max-w-md italic leading-snug`}>
             "{cert.topic}"
           </p>
         </div>
 
-        {/* Footer with Signature and Date */}
         <div className="flex justify-between items-end z-10">
-          <div className="flex items-center gap-4">
-            <div className={`w-12 h-12 rounded-full border ${isLight ? 'border-gray-100' : 'border-white/5'} flex items-center justify-center ${isLight ? 'bg-gray-50' : 'bg-white/[0.02]'}`}>
-              <Fingerprint size={24} className={`${isLight ? 'text-gray-300' : 'text-gray-600'}`} />
+          <div className="flex items-center gap-3">
+            <div className={`w-10 h-10 rounded-full border ${isLight ? 'border-gray-100' : 'border-white/5'} flex items-center justify-center ${isLight ? 'bg-gray-50' : 'bg-white/[0.02]'}`}>
+              <Fingerprint size={20} className={isLight ? 'text-gray-300' : 'text-gray-600'} />
             </div>
             <div className="text-left">
               <p className={`text-[8px] font-mono uppercase ${isLight ? 'text-gray-400' : 'text-gray-600'}`}>Verified Identity</p>
               <p className={`text-[10px] font-mono ${isLight ? 'text-gray-500' : 'text-gray-400'}`}>Digital Signature Active</p>
             </div>
           </div>
-
-          {/* Signature Area */}
           <div className="flex flex-col items-center">
-            <motion.p 
-              initial={{ opacity: 0 }}
-              animate={isUnlocked ? { opacity: 1 } : { opacity: 0 }}
-              transition={{ delay: 1, duration: 1 }}
-              className={`text-2xl font-serif italic ${isLight ? 'text-gray-900' : 'text-white'} mb-0 translate-y-2 select-none`}
-              style={{ fontFamily: "'Dancing Script', 'Brush Script MT', cursive" }}
-            >
+            <p className={`text-xl font-serif italic ${isLight ? 'text-gray-900' : 'text-white'} mb-0 translate-y-2 select-none`}
+               style={{ fontFamily: "'Dancing Script', 'Brush Script MT', cursive" }}>
               {cert.signatory.name}
-            </motion.p>
-            <div className={`w-32 h-[1px] ${isLight ? 'bg-gray-300' : 'bg-white/20'}`} />
+            </p>
+            <div className={`w-28 h-px ${isLight ? 'bg-gray-300' : 'bg-white/20'}`} />
             <p className={`text-[8px] font-mono uppercase ${isLight ? 'text-gray-500' : 'text-gray-500'} mt-1`}>{cert.signatory.title}</p>
           </div>
-          
           <div className="text-right">
             <p className={`text-[8px] font-mono uppercase ${isLight ? 'text-gray-400' : 'text-gray-600'} tracking-widest mb-1`}>Authenticated</p>
             <div className="flex items-center gap-1 justify-end">
               <span className={`text-xs font-mono ${isLight ? 'text-gray-600' : 'text-gray-400'}`}>{cert.date}</span>
-              <ShieldCheck size={14} className="text-emerald-500" />
+              <ShieldCheck size={12} className="text-emerald-500" />
             </div>
           </div>
         </div>
-
-        {/* Holographic Seal Overlay */}
-        <div className={`absolute -bottom-12 -right-12 w-48 h-48 rounded-full border ${isLight ? 'border-gray-200' : 'border-white/5'} bg-gradient-to-br ${isLight ? 'from-gray-50' : 'from-white/[0.02]'} to-transparent pointer-events-none group-hover:rotate-45 transition-transform duration-1000`}></div>
       </div>
+    );
+  };
+
+  return (
+    <motion.div
+      variants={certVariants}
+      initial="hidden"
+      animate={isUnlocked ? "visible" : "hidden"}
+      className="relative w-full max-w-2xl aspect-[1.4/1] select-none"
+    >
+      <div className="absolute -inset-1 bg-gradient-to-r opacity-10 rounded-2xl blur pointer-events-none"></div>
+      {renderInnerCard()}
     </motion.div>
   );
 };
