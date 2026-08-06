@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Award, ShieldCheck, Brain, Database, MessageSquare, Fingerprint, Scan, Lock, Unlock } from 'lucide-react';
+import { Award, ShieldCheck, Brain, Database, MessageSquare, Fingerprint, Scan, Lock, Unlock, Download, ExternalLink } from 'lucide-react';
 import GradientBlur from '../components/GradientBlur';
 
 const pageVariants = {
@@ -68,6 +68,19 @@ const certificates = [
     signatory: { name: 'Prof. Alistair Reed', title: 'Head of AI Ethics Board' },
     pattern: 'waves',
     theme: 'light'
+  },
+  {
+    id: 'AIML-2026-005',
+    title: 'Advance Your Skills in AI and Machine Learning',
+    topic: 'Neural Networks, Deep Learning, ML Pipelines, and AI Production Workflows',
+    icon: Brain,
+    color: 'from-orange-500 to-amber-600',
+    accent: '#f59e0b',
+    date: 'August 05, 2026',
+    signatory: { name: 'LinkedIn Learning', title: 'Official Program Certificate' },
+    pattern: 'circuit',
+    theme: 'dark',
+    pdfUrl: `${import.meta.env.BASE_URL}certificates/AI_ML_Advance_Skills_Certificate.pdf`
   }
 ];
 
@@ -126,7 +139,32 @@ const CertificateCard = ({ cert, isUnlocked }) => {
               <p className={`text-xs font-mono ${isLight ? 'text-gray-600' : 'text-white/80'}`}>Ref: {cert.id}</p>
             </div>
           </div>
-          <Award size={32} className={`${isLight ? 'text-gray-200' : 'text-white/10'} group-hover:text-cyan-accent/20 transition-colors`} />
+          <div className="flex items-center gap-2">
+            {cert.pdfUrl && (
+              <>
+                <a
+                  href={cert.pdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="View Certificate PDF"
+                  className={`p-2 rounded-lg border backdrop-blur-sm transition-all duration-300 group-hover:scale-110 ${isLight ? 'border-gray-200 text-gray-400 hover:border-amber-400 hover:text-amber-500' : 'border-white/10 text-white/40 hover:border-cyan-accent hover:text-cyan-accent'}`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <ExternalLink size={16} />
+                </a>
+                <a
+                  href={cert.pdfUrl}
+                  download
+                  title="Download Certificate PDF"
+                  className={`p-2 rounded-lg border backdrop-blur-sm transition-all duration-300 group-hover:scale-110 ${isLight ? 'border-gray-200 text-gray-400 hover:border-emerald-400 hover:text-emerald-500' : 'border-white/10 text-white/40 hover:border-emerald-400 hover:text-emerald-400'}`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Download size={16} />
+                </a>
+              </>
+            )}
+            <Award size={32} className={`${isLight ? 'text-gray-200' : 'text-white/10'} group-hover:text-cyan-accent/20 transition-colors`} />
+          </div>
         </div>
 
         {/* Content */}
